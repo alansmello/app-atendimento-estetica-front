@@ -2,7 +2,7 @@ import React from "react";
 import { api } from "./clinicaestetica";
 import jwt_decode from 'jwt-decode';
 
-const LoginService = async (username, senha) => {
+const LoginService = async (username: string, senha: string) => {
 
     console.log("username :", username, "Senha", senha, "To dentro do API Response");
     var tokenDecodificado = null;

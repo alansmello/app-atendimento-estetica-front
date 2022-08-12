@@ -1,6 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { api } from '../../services/clinicaestetica';
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { Box, FlatList, Heading, Avatar, HStack,FormControl, Input, VStack, Text, Spacer, Center, NativeBaseProvider, Button, Modal } from "native-base";
+
 
 interface PatientProps {
   id: number,
@@ -11,7 +15,7 @@ interface PatientProps {
   avatarUrl: "https://i.pinimg.com/originals/eb/7a/76/eb7a76586b59150000d30b3b3339c883.png"
 }
 export const Patient = () => {
-
+  
   const [PatientList, setPatientList] = useState<PatientProps[]>([]);
   const [PatientId, setPatientId] = useState(0);
   const [name, setName] = useState("");
@@ -27,9 +31,13 @@ export const Patient = () => {
 
   useEffect(() => {
     const list = async () => {
+      let token = JSON.parse(await AsyncStorage.getItem('auth'));
+     
       try {
         const patientAPI = await api.get(`patient/getAllPatient`, {
-          headers: { Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYXNzYSIsImV4cCI6MTY2MDQwNzg4OX0.1nod-M8sL9ETCf34PuDC_SmxpMc14L1uNgUGiQMAjpTwo8F65Ypgt3oT70jPYx7VQT0LVUOxcjKkPIoBO5jfww" }
+
+          headers: { Authorization: `Bearer ${token}` }
+
         })
         setPatientList(patientAPI.data);
 
@@ -39,6 +47,7 @@ export const Patient = () => {
     }
     list();
   }, []);
+  
 
   const deletePatient = async () => {
     try {
@@ -81,6 +90,7 @@ export const Patient = () => {
   }
 
   return <Box>
+
     <Heading marginTop="50 px" fontSize="xl" p="4" pb="3">
       Lista de Pacientes
     </Heading>
