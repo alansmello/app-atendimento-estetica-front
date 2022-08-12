@@ -3,11 +3,12 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NativeBaseProvider } from 'native-base';
 import { Login } from './src/screens/Login';
+import { Patient } from './src/screens/Patient';
 
 export default function App() {
   return (
     <NativeBaseProvider>
-      <Login/>
+      <Patient/>
     </NativeBaseProvider>
   );
 }
