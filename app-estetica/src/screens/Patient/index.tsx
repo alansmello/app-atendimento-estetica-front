@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { api } from '../../services/clinicaestetica';
 import { Box, FlatList, Heading, Avatar, HStack, VStack, Text, Spacer, Center, NativeBaseProvider } from "native-base";
+import { AuthenticationContext } from '../../context/Authentication';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface PatientProps {
   id: number,
@@ -11,25 +13,28 @@ interface PatientProps {
   avatarUrl: "https://i.pinimg.com/originals/eb/7a/76/eb7a76586b59150000d30b3b3339c883.png"
 }
 export const Patient = () => {
-
+  
   const [PatientList, setPatientList] = useState<PatientProps[]>([]);
 
   useEffect(() => {
     const list = async () => {
+      let token = JSON.parse(await AsyncStorage.getItem('auth'));
+     
       try {
         const patientAPI = await api.get(`patient/getAllPatient`, {
-          headers: { Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYXNzYSIsImV4cCI6MTY2MDMyMTQzM30.EruWjwe18JDr5h2Xt5d_wq7YrxSt-N13ym8SJbJkkUuOvuyJCXpP8Bp8D6wzly-OAI3EoX1g47CXz067wEjl0g" }
+          headers: { Authorization: `Bearer ${token}` }
         })
         setPatientList(patientAPI.data);
 
       } catch (error) {
-        console.log("error")
+        console.log(error)
       }
     }
     list();
   }, []);
+  
 
-  return <Box>
+   return <Box>
     <Heading marginTop="50 px" fontSize="xl" p="4" pb="3">
       Lista de Pacientes
     </Heading>

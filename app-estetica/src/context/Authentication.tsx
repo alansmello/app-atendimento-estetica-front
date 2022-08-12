@@ -1,34 +1,34 @@
 import React, { createContext, useState } from "react";
-import { LoginService } from "../services/LoginService";
+import { api } from "../services/clinicaestetica";
+import jwt_decode from 'jwt-decode';
 
-export const AuthenticationContext = createContext({});
+interface AuthenticationContext {
+  
+    usuario: String,
+    addToken: (token: String) => void;
+}
+
+
+export const AuthenticationContext = createContext<AuthenticationContext>({
+
+    usuario:"",
+    addToken: (token: "") => { },
+});
 
 export const AuthenticationProvider = ({ children }) => {
-    const [usuario, setUsuario] = useState<Object>({
-        username:'',
-        token: ''
-    });
+    const [usuario, setUsuario] = useState<String>("");
 
-
-    const login = async (email, senha) => {
-
-        const answerServiceLogin = await LoginService(email, senha);
-        if (!answerServiceLogin) {
-            return false;
-        } else {
-            setUsuario({
-                username: answerServiceLogin?.username,
-                token: answerServiceLogin?.token,
-                
-            });
-            return true;
-        }
+    function addToken(token: String) {
+        setUsuario(token);
     };
+
 
     return (
         <AuthenticationContext.Provider value={{
-            login,
-            usuario
+        
+            usuario,
+            addToken,
+            
         }}>
             {children}
         </AuthenticationContext.Provider>
