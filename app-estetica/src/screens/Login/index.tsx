@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import {
     Text,
@@ -12,9 +12,31 @@ import {
     VStack,
     Image
 } from 'native-base';
+import { AuthenticationContext } from '../../context/Authentication';
 
-export const Login = () => {
+ export const Login = () => {
     const [show, setShow] = useState<Boolean>(false);
+    //const { login, usuario } = useContext(AuthenticationContext);
+    const [username, setUsername] = useState<String>("");
+    const [senha, setSenha] = useState<String>("");
+
+    /*const handleLogin = async (e) => {
+        e.preventDefault();
+        console.log("Username : ", username, "Senha :", senha);
+    i
+        const answerLogin = await login(username, senha);
+        if (!answerLogin) {
+          console.log("Não foi possivel Realizar o Login");
+        } else {
+          
+    
+        
+          console.log("Login Realizado Com Sucesso.", {
+          
+          });
+       
+        }
+      } */
 
     return (
         <Center
