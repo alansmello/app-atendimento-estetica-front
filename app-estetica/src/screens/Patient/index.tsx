@@ -4,6 +4,7 @@ import { api } from '../../services/clinicaestetica';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { Box, FlatList, Heading, Avatar, HStack,FormControl, Input, VStack, Text, Spacer, Center, NativeBaseProvider, Button, Modal } from "native-base";
+import { GestureResponderEvent } from "react-native";
 
 
 interface PatientProps {
@@ -26,17 +27,17 @@ export const Patient = () => {
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [error1, setError1] = useState("");
-
+  const [token, setToken]= useState<String>("");
 
 
   useEffect(() => {
     const list = async () => {
-      let token = JSON.parse(await AsyncStorage.getItem('auth'));
+      setToken(JSON.parse(await AsyncStorage.getItem('auth')));
      
       try {
         const patientAPI = await api.get(`patient/getAllPatient`, {
 
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${JSON.parse(await AsyncStorage.getItem('auth'))}` }
 
         })
         setPatientList(patientAPI.data);
@@ -46,13 +47,13 @@ export const Patient = () => {
       }
     }
     list();
-  }, []);
+  }, [token]);
   
 
   const deletePatient = async () => {
     try {
       const patientAPI = await api.delete(`patient/deletePatient/${PatientId}`, {
-        headers: { Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYXNzYSIsImV4cCI6MTY2MDQwNzg4OX0.1nod-M8sL9ETCf34PuDC_SmxpMc14L1uNgUGiQMAjpTwo8F65Ypgt3oT70jPYx7VQT0LVUOxcjKkPIoBO5jfww" }
+        headers: { Authorization: `Bearer ${token}` }
       })
     } catch (error) {
       console.log("error")
@@ -67,14 +68,16 @@ export const Patient = () => {
         whatsapp: `${whatsApp}`,
         birthday: `${birthday}`
       }, {
-        headers: { Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYXNzYSIsImV4cCI6MTY2MDQwNzg4OX0.1nod-M8sL9ETCf34PuDC_SmxpMc14L1uNgUGiQMAjpTwo8F65Ypgt3oT70jPYx7VQT0LVUOxcjKkPIoBO5jfww" }
+        headers: { Authorization: `Bearer ${token}` }
       })
     } catch (error) {
       // console.log("abc")
     }
   }
 
-  const addPatient = async () => {
+  const addPatient = async (e: GestureResponderEvent) => {
+    e.preventDefault();
+    console.log(name + email +whatsApp + birthday)
     try {
       const patientAPI = await api.post(`patient/addPatient`, {
         name: `${name}`,
@@ -82,10 +85,10 @@ export const Patient = () => {
         whatsapp: `${whatsApp}`,
         birthday: `${birthday}`
       }, {
-        headers: { Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYXNzYSIsImV4cCI6MTY2MDQwNzg4OX0.1nod-M8sL9ETCf34PuDC_SmxpMc14L1uNgUGiQMAjpTwo8F65Ypgt3oT70jPYx7VQT0LVUOxcjKkPIoBO5jfww" }
+        headers: { Authorization: `Bearer ${token}` }
       })
     } catch (error) {
-      console.log(error.patientAPI?.headers.error)
+      console.log(error)
     }
   }
 
@@ -125,8 +128,8 @@ export const Patient = () => {
             }}>
                 Sair
               </Button>
-              <Button onPress={() => {
-              addPatient();
+              <Button onPress={(e) => {
+              addPatient(e);
               setShowModalAdd(false);
             }}>
                 Confirmar
@@ -147,22 +150,22 @@ export const Patient = () => {
             <Text _dark={{
               color: "warmGray.50"
             }} color="coolGray.800" bold>
-              {item.name}
+              {item?.name}
             </Text>
             <Text color="coolGray.600" _dark={{
               color: "warmGray.200"
             }}>
-              {item.email}
+              {item?.email}
             </Text>
             <Text color="coolGray.600" _dark={{
               color: "warmGray.200"
             }}>
-              {item.whatsapp}
+              {item?.whatsapp}
             </Text>
             <Text color="coolGray.600" _dark={{
               color: "warmGray.200"
             }}>
-              {item.birthday.split("-").reverse().join("/")}
+              {item.birthday?.split("-").reverse().join("/")}
             </Text>
           </VStack>
           <Spacer />
