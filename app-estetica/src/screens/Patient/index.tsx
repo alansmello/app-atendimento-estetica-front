@@ -3,7 +3,7 @@ import { api } from '../../services/clinicaestetica';
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { Box, FlatList, Heading, Avatar, HStack,FormControl, Input, VStack, Text, Spacer, Center, NativeBaseProvider, Button, Modal } from "native-base";
+import { Box, FlatList, Heading, Avatar, HStack, FormControl, Input, VStack, Text, Spacer, Center, NativeBaseProvider, Button, Modal } from "native-base";
 import { GestureResponderEvent } from "react-native";
 
 
@@ -15,8 +15,8 @@ interface PatientProps {
   birthday: string,
   avatarUrl: "https://i.pinimg.com/originals/eb/7a/76/eb7a76586b59150000d30b3b3339c883.png"
 }
-export const Patient = () => {
-  
+export const Patient = ({ navigation }) => {
+
   const [PatientList, setPatientList] = useState<PatientProps[]>([]);
   const [PatientId, setPatientId] = useState(0);
   const [name, setName] = useState("");
@@ -26,14 +26,14 @@ export const Patient = () => {
   const [showModal, setShowModal] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalAdd, setShowModalAdd] = useState(false);
-  const [error1, setError1] = useState("");
-  const [token, setToken]= useState<String>("");
+  const [refresh, setRefresh] = useState<boolean>(false);
+  const [token, setToken] = useState<String>("");
 
 
   useEffect(() => {
     const list = async () => {
       setToken(JSON.parse(await AsyncStorage.getItem('auth')));
-     
+
       try {
         const patientAPI = await api.get(`patient/getAllPatient`, {
 
@@ -41,20 +41,22 @@ export const Patient = () => {
 
         })
         setPatientList(patientAPI.data);
+        setRefresh(false)
 
       } catch (error) {
         console.log(error)
       }
     }
     list();
-  }, [token]);
-  
+  }, [refresh, PatientList]);
+
 
   const deletePatient = async () => {
     try {
       const patientAPI = await api.delete(`patient/deletePatient/${PatientId}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
+      setRefresh(true)
     } catch (error) {
       console.log("error")
     }
@@ -70,6 +72,7 @@ export const Patient = () => {
       }, {
         headers: { Authorization: `Bearer ${token}` }
       })
+      setRefresh(true)
     } catch (error) {
       // console.log("abc")
     }
@@ -77,7 +80,7 @@ export const Patient = () => {
 
   const addPatient = async (e: GestureResponderEvent) => {
     e.preventDefault();
-    console.log(name + email +whatsApp + birthday)
+
     try {
       const patientAPI = await api.post(`patient/addPatient`, {
         name: `${name}`,
@@ -87,6 +90,7 @@ export const Patient = () => {
       }, {
         headers: { Authorization: `Bearer ${token}` }
       })
+      setRefresh(true)
     } catch (error) {
       console.log(error)
     }
@@ -98,51 +102,52 @@ export const Patient = () => {
       Lista de Pacientes
     </Heading>
     <Button onPress={() => {
-              setShowModalAdd(true)}}>Novo Paciente</Button>
-              <Modal isOpen={showModalAdd} onClose={() => setShowModalAdd(false)}>
-        <Modal.Content maxWidth="400px">
-          <Modal.CloseButton />
-          <Modal.Header>Adicionar Pacientes</Modal.Header>
-          <Modal.Body>
-            <FormControl>
-              <FormControl.Label>Nome</FormControl.Label>
-              <Input value={name} onChangeText={setName}/>
-            </FormControl>
-            <FormControl mt="3">
-              <FormControl.Label>Email</FormControl.Label>
-              <Input value={email} onChangeText={setEmail}/>
-            </FormControl>
-            <FormControl>
-              <FormControl.Label>WhatsApp</FormControl.Label>
-              <Input value={whatsApp} onChangeText={setwhatsApp}/>
-              </FormControl>
-              <FormControl>
-              <FormControl.Label>Data de aniversário</FormControl.Label>
-              <Input value={birthday} onChangeText={setBirthday}/>
-              </FormControl>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button.Group space={2}>
-              <Button variant="ghost" colorScheme="blueGray" onPress={() => {
+      setShowModalAdd(true)
+    }}>Novo Paciente</Button>
+    <Modal isOpen={showModalAdd} onClose={() => setShowModalAdd(false)}>
+      <Modal.Content maxWidth="400px">
+        <Modal.CloseButton />
+        <Modal.Header>Adicionar Pacientes</Modal.Header>
+        <Modal.Body>
+          <FormControl>
+            <FormControl.Label>Nome</FormControl.Label>
+            <Input value={name} onChangeText={setName} />
+          </FormControl>
+          <FormControl mt="3">
+            <FormControl.Label>Email</FormControl.Label>
+            <Input value={email} onChangeText={setEmail} />
+          </FormControl>
+          <FormControl>
+            <FormControl.Label>WhatsApp</FormControl.Label>
+            <Input value={whatsApp} onChangeText={setwhatsApp} />
+          </FormControl>
+          <FormControl>
+            <FormControl.Label>Data de aniversário</FormControl.Label>
+            <Input value={birthday} onChangeText={setBirthday} />
+          </FormControl>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button.Group space={2}>
+            <Button variant="ghost" colorScheme="blueGray" onPress={() => {
               setShowModalAdd(false);
             }}>
-                Sair
-              </Button>
-              <Button onPress={(e) => {
+              Sair
+            </Button>
+            <Button onPress={(e) => {
               addPatient(e);
               setShowModalAdd(false);
             }}>
-                Confirmar
-              </Button>
-            </Button.Group>
-          </Modal.Footer>
-        </Modal.Content>
-      </Modal>
+              Confirmar
+            </Button>
+          </Button.Group>
+        </Modal.Footer>
+      </Modal.Content>
+    </Modal>
     <FlatList marginTop="5 px" data={PatientList} renderItem={({ item }) =>
       <Box borderBottomWidth="1" _dark={{
         borderColor: "gray.600"
       }} borderColor="coolGray.200" pl="4" pr="5" py="2">
-        <HStack  marginTop={"10px"} space={3} justifyContent="space-between">
+        <HStack marginTop={"10px"} space={3} justifyContent="space-between">
           <Avatar size="48px" source={{
             uri: item.avatarUrl
           }} />
@@ -172,47 +177,49 @@ export const Patient = () => {
           <Text fontSize="xs" _dark={{
             color: "warmGray.50"
           }} color="coolGray.800" alignSelf="flex-start">
-            <Button margin={"10px"} onPress={() => {setPatientId(item.id) 
-              setShowModalEdit(true)}}>Editar</Button>
+            <Button margin={"10px"} onPress={() => {
+              setPatientId(item.id)
+              setShowModalEdit(true)
+            }}>Editar</Button>
             <Modal isOpen={showModalEdit} onClose={() => setShowModalEdit(false)}>
-        <Modal.Content maxWidth="400px">
-          <Modal.CloseButton />
-          <Modal.Header>Editar Pacientes</Modal.Header>
-          <Modal.Body>
-            <FormControl>
-              <FormControl.Label>Nome</FormControl.Label>
-              <Input value={name} onChangeText={setName}/>
-            </FormControl>
-            <FormControl mt="3">
-              <FormControl.Label>Email</FormControl.Label>
-              <Input value={email} onChangeText={setEmail}/>
-            </FormControl>
-            <FormControl>
-              <FormControl.Label>WhatsApp</FormControl.Label>
-              <Input value={whatsApp} onChangeText={setwhatsApp}/>
-              </FormControl>
-              <FormControl>
-              <FormControl.Label>Data de aniversário</FormControl.Label>
-              <Input value={birthday} onChangeText={setBirthday}/>
-              </FormControl>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button.Group space={2}>
-              <Button variant="ghost" colorScheme="blueGray" onPress={() => {
-              setShowModalEdit(false);
-            }}>
-                Sair
-              </Button>
-              <Button onPress={() => {
-              editPatient();
-              setShowModalEdit(false);
-            }}>
-                Confirmar
-              </Button>
-            </Button.Group>
-          </Modal.Footer>
-        </Modal.Content>
-      </Modal>
+              <Modal.Content maxWidth="400px">
+                <Modal.CloseButton />
+                <Modal.Header>Editar Pacientes</Modal.Header>
+                <Modal.Body>
+                  <FormControl>
+                    <FormControl.Label>Nome</FormControl.Label>
+                    <Input value={name} onChangeText={setName} />
+                  </FormControl>
+                  <FormControl mt="3">
+                    <FormControl.Label>Email</FormControl.Label>
+                    <Input value={email} onChangeText={setEmail} />
+                  </FormControl>
+                  <FormControl>
+                    <FormControl.Label>WhatsApp</FormControl.Label>
+                    <Input value={whatsApp} onChangeText={setwhatsApp} />
+                  </FormControl>
+                  <FormControl>
+                    <FormControl.Label>Data de aniversário</FormControl.Label>
+                    <Input value={birthday} onChangeText={setBirthday} />
+                  </FormControl>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button.Group space={2}>
+                    <Button variant="ghost" colorScheme="blueGray" onPress={() => {
+                      setShowModalEdit(false);
+                    }}>
+                      Sair
+                    </Button>
+                    <Button onPress={() => {
+                      editPatient();
+                      setShowModalEdit(false);
+                    }}>
+                      Confirmar
+                    </Button>
+                  </Button.Group>
+                </Modal.Footer>
+              </Modal.Content>
+            </Modal>
             <Button onPress={() => {
               setPatientId(item.id)
               setShowModal(true)
@@ -228,7 +235,7 @@ export const Patient = () => {
                   </VStack>
                 </Modal.Body>
                 <Modal.Footer>
-                <Button margin={"10px"} flex="1" onPress={() => {
+                  <Button margin={"10px"} flex="1" onPress={() => {
                     setShowModal(false);
                     deletePatient()
                   }}>
