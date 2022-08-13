@@ -13,7 +13,7 @@ interface PatientProps {
   whatsapp: string,
   email: string,
   birthday: string,
-  avatarUrl: "https://i.pinimg.com/originals/eb/7a/76/eb7a76586b59150000d30b3b3339c883.png"
+  avatarUrl: "https://www.w3schools.com/css/img_lights.jpg"
 }
 export const Patient = ({ navigation }) => {
 
