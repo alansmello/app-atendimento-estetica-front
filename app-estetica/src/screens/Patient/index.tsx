@@ -3,7 +3,7 @@ import { api } from '../../services/clinicaestetica';
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { Box, FlatList, Heading, Avatar, HStack, FormControl, Input, VStack, Text, Spacer, Center, NativeBaseProvider, Button, Modal } from "native-base";
+import { Box, FlatList, Heading, Avatar, HStack, FormControl, Input, VStack, Text, Spacer, Center, NativeBaseProvider, Button, Modal, Stack, Divider, ScrollView } from "native-base";
 import { GestureResponderEvent } from "react-native";
 
 
@@ -48,7 +48,7 @@ export const Patient = ({ navigation }) => {
       }
     }
     list();
-  }, [refresh, PatientList]);
+  }, [refresh]);
 
 
   const deletePatient = async () => {
@@ -97,7 +97,6 @@ export const Patient = ({ navigation }) => {
   }
 
   return <Box>
-
     <Heading marginTop="50 px" fontSize="xl" p="4" pb="3">
       Lista de Pacientes
     </Heading>
@@ -143,7 +142,7 @@ export const Patient = ({ navigation }) => {
         </Modal.Footer>
       </Modal.Content>
     </Modal>
-    <FlatList marginTop="5 px" data={PatientList} renderItem={({ item }) =>
+    <FlatList data={PatientList} renderItem={({ item }) =>
       <Box borderBottomWidth="1" _dark={{
         borderColor: "gray.600"
       }} borderColor="coolGray.200" pl="4" pr="5" py="2">
@@ -172,15 +171,27 @@ export const Patient = ({ navigation }) => {
             }}>
               {item.birthday?.split("-").reverse().join("/")}
             </Text>
+            <Stack mb="2.5" mt="1.5" direction={{
+              base: "row",
+              md: "row"
+            }} space={2} mx={{
+              base: "auto",
+              md: "0"
+            }}>
+              <Button marginLeft={"60px"} onPress={() => {
+              setPatientId(item.id)
+              setShowModalEdit(true)
+            }}>Editar</Button>
+              <Button onPress={() => {
+              setPatientId(item.id)
+              setShowModal(true)
+            }}>Excluir</Button>
+            </Stack>
           </VStack>
           <Spacer />
           <Text fontSize="xs" _dark={{
             color: "warmGray.50"
           }} color="coolGray.800" alignSelf="flex-start">
-            <Button margin={"10px"} onPress={() => {
-              setPatientId(item.id)
-              setShowModalEdit(true)
-            }}>Editar</Button>
             <Modal isOpen={showModalEdit} onClose={() => setShowModalEdit(false)}>
               <Modal.Content maxWidth="400px">
                 <Modal.CloseButton />
@@ -220,10 +231,6 @@ export const Patient = ({ navigation }) => {
                 </Modal.Footer>
               </Modal.Content>
             </Modal>
-            <Button onPress={() => {
-              setPatientId(item.id)
-              setShowModal(true)
-            }}>Excluir</Button>
             <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="lg">
               <Modal.Content maxWidth="350">
                 <Modal.CloseButton />
@@ -253,4 +260,5 @@ export const Patient = ({ navigation }) => {
         </HStack>
       </Box>} keyExtractor={item => item.name} />
   </Box>;
+
 };
