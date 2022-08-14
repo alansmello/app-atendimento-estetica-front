@@ -35,6 +35,7 @@ export const Login = ({ navigation }) => {
             if (resposta.status === 200) {
 
                 storeData(JSON.stringify(resposta.data))
+                console.log("teste")
                 navigation.navigate("Patient")
 
             }
@@ -92,7 +93,7 @@ export const Login = ({ navigation }) => {
                             value={senha} onChangeText={setSenha} />
                     </FormControl>
                 </Stack>
-                <Button mt="8" colorScheme="indigo">
+                <Button mt="8" colorScheme="indigo" onPress={(e)=>handleLogin(e)}>
                     Entrar
                 </Button>
 
