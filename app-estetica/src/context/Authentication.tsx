@@ -4,29 +4,29 @@ import jwt_decode from 'jwt-decode';
 
 interface AuthenticationContext {
   
-    usuario: String,
-    addToken: (token: String) => void;
+    token: string,
+    addToken: (token: string) => void;
 }
 
 
 export const AuthenticationContext = createContext<AuthenticationContext>({
 
-    usuario:"",
+    token:"",
     addToken: (token: "") => { },
 });
 
 export const AuthenticationProvider = ({ children }) => {
-    const [usuario, setUsuario] = useState<String>("");
+    const [token, setToken] = useState<string>("");
 
-    function addToken(token: String) {
-        setUsuario(token);
+    function addToken(token: string) {
+        setToken(token);
     };
 
 
     return (
         <AuthenticationContext.Provider value={{
         
-            usuario,
+            token,
             addToken,
             
         }}>

@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
 import { api } from '../../services/clinicaestetica';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { Box, FlatList, Heading, Avatar, HStack, FormControl, Input, VStack, Text, Spacer, Center, NativeBaseProvider, Button, Modal, Stack, Divider, ScrollView } from "native-base";
+import { Box, FlatList, Heading, Avatar, HStack, FormControl, Input, VStack, Text, Spacer, Center, NativeBaseProvider, Button, Modal, Stack, Divider, ScrollView, Icon } from "native-base";
 import { GestureResponderEvent } from "react-native";
+import { AuthenticationContext } from "../../context/Authentication";
 
 
 interface PatientProps {
@@ -27,34 +29,58 @@ export const Patient = ({ navigation }) => {
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [refresh, setRefresh] = useState<boolean>(false);
-  const [token, setToken] = useState<String>("");
+  //const [token, setToken] = useState<String>("");
+  const token = useContext(AuthenticationContext).token
+  const [search,setSearch] = useState<string>("")
 
-
-  useEffect(() => {
+ /*  useEffect(() => {
     const list = async () => {
-      setToken(JSON.parse(await AsyncStorage.getItem('auth')));
+      //setToken(JSON.parse(await AsyncStorage.getItem('auth')));
 
-      try {
-        const patientAPI = await api.get(`patient/getAllPatient`, {
+      try { <Button onPress={() => {
+      setShowModalAdd(true)
+    }}>Novo Paciente</Button>
+        const patientAPI =  await api.get(`patient/getAllPatient`, {
 
-          headers: { Authorization: `Bearer ${JSON.parse(await AsyncStorage.getItem('auth'))}` }
+       
+         headers: { Authorization: `Bearer ${JSON.parse(token)}` }
 
         })
+        
         setPatientList(patientAPI.data);
-        setRefresh(false)
+        setRefresh(false);
 
       } catch (error) {
         console.log(error)
+        console.log(token);
       }
     }
     list();
-  }, [refresh]);
+  }, [refresh]); */
 
+  const getOne = async () => {
+   
+
+    try {
+      const patientAPI =  await api.get(`patient/${search}`, {
+
+       headers: { Authorization: `Bearer ${JSON.parse(token)}` }
+
+      })
+      
+      setPatientList(patientAPI.data);
+     
+
+    } catch (error) {
+      console.log(error)
+     
+    }
+  }
 
   const deletePatient = async () => {
     try {
       const patientAPI = await api.delete(`patient/deletePatient/${PatientId}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${JSON.parse(token)}` }
       })
       setRefresh(true)
     } catch (error) {
@@ -70,7 +96,7 @@ export const Patient = ({ navigation }) => {
         whatsapp: `${whatsApp}`,
         birthday: `${birthday}`
       }, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${JSON.parse(token)}` }
       })
       setRefresh(true)
     } catch (error) {
@@ -88,7 +114,7 @@ export const Patient = ({ navigation }) => {
         whatsapp: `${whatsApp}`,
         birthday: `${birthday}`
       }, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${JSON.parse(token)}` }
       })
       setRefresh(true)
     } catch (error) {
@@ -100,9 +126,24 @@ export const Patient = ({ navigation }) => {
     <Heading marginTop="50 px" fontSize="xl" p="4" pb="3">
       Lista de Pacientes
     </Heading>
+  
+    <FormControl>
+                        <FormControl.Label>Buscar</FormControl.Label>
+                        <Input w={{
+                            base: "100%",
+                            md: "25%"
+                        }} InputRightElement={<Icon as={<MaterialIcons name="person" />} size={5} mr="2" color="black" />} borderColor={'black'} type="text" value={search} onChangeText={setSearch} />
+
+                    </FormControl>
+                    <Button onPress={() => {
+     getOne()
+    }}>teste</Button>
+
     <Button onPress={() => {
       setShowModalAdd(true)
     }}>Novo Paciente</Button>
+
+
     <Modal isOpen={showModalAdd} onClose={() => setShowModalAdd(false)}>
       <Modal.Content maxWidth="400px">
         <Modal.CloseButton />
@@ -142,14 +183,18 @@ export const Patient = ({ navigation }) => {
         </Modal.Footer>
       </Modal.Content>
     </Modal>
+
+  <Center>
     <FlatList data={PatientList} renderItem={({ item }) =>
+
+
       <Box borderBottomWidth="1" _dark={{
         borderColor: "gray.600"
       }} borderColor="coolGray.200" pl="4" pr="5" py="2">
         <HStack marginTop={"10px"} space={3} justifyContent="space-between">
-          <Avatar size="48px" source={{
+          {/* <Avatar size="48px" source={{
             uri: item.avatarUrl
-          }} />
+          }} /> */}
           <VStack>
             <Text _dark={{
               color: "warmGray.50"
@@ -188,10 +233,13 @@ export const Patient = ({ navigation }) => {
             }}>Excluir</Button>
             </Stack>
           </VStack>
+
           <Spacer />
+
           <Text fontSize="xs" _dark={{
             color: "warmGray.50"
           }} color="coolGray.800" alignSelf="flex-start">
+
             <Modal isOpen={showModalEdit} onClose={() => setShowModalEdit(false)}>
               <Modal.Content maxWidth="400px">
                 <Modal.CloseButton />
@@ -237,10 +285,11 @@ export const Patient = ({ navigation }) => {
                 <Modal.Body>
                   <VStack space={3}>
                     <HStack alignItems="center" justifyContent="space-between">
-                      <Text alignItems="center" >TEM CERTEZA QUE DESEJA EXCLUIR ESSE PACIENTE?</Text>
+                      <Text alignItems="center" >TEM CERTEZA QUE DESEJA EXCLUIR O PACIENTE?</Text>
                     </HStack>
                   </VStack>
                 </Modal.Body>
+
                 <Modal.Footer>
                   <Button margin={"10px"} flex="1" onPress={() => {
                     setShowModal(false);
@@ -259,6 +308,7 @@ export const Patient = ({ navigation }) => {
           </Text>
         </HStack>
       </Box>} keyExtractor={item => item.name} />
+      </Center>
   </Box>;
 
 };

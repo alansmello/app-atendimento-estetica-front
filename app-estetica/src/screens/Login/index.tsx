@@ -16,12 +16,14 @@ import { api } from "../../services/clinicaestetica";
 
 import { GestureResponderEvent } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthenticationContext } from '../../context/Authentication';
 
 export const Login = ({ navigation }) => {
 
     const [show, setShow] = useState<Boolean>(false);
     const [username, setUsername] = useState<string>("");
     const [senha, setSenha] = useState<string>("");
+    const addToken = useContext(AuthenticationContext).addToken
 
     const handleLogin = async (e: GestureResponderEvent) => {
         e.preventDefault();
@@ -35,6 +37,7 @@ export const Login = ({ navigation }) => {
             if (resposta.status === 200) {
 
                 storeData(JSON.stringify(resposta.data))
+                addToken(JSON.stringify(resposta.data))
                 console.log("teste")
                 navigation.navigate("Patient")
 
