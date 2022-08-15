@@ -124,9 +124,9 @@ export const Patient = ({ navigation }) => {
 
   return (
     <Center height={"full"}>
-      <Box safeArea p="0" w="80%" maxW="290" py="9">
+      <Box safeArea p="0" h="80%" w="80%" maxW="290">
 
-      <Image source={require('../../images/logo.png')} alt="logomarca Priscila Haubrich" size="2xl" style={{width:290}} />
+      <Image source={require('../../images/logo.png')} alt="logomarca Priscila Haubrich" size="md" style={{width:290}} />
 
         <FormControl>
      
@@ -189,10 +189,10 @@ export const Patient = ({ navigation }) => {
         <FlatList data={PatientList} renderItem={({ item }) =>
 
 
-          <Box borderBottomWidth="1" _dark={{
-            borderColor: "gray.600"
-          }} borderColor="coolGray.200" pl="4" pr="5" py="2">
-            <HStack marginTop={"10px"} space={3} justifyContent="space-between">
+          <Box borderBottomWidth="5" _dark={{
+            borderColor: "gray.900"
+          }} borderColor="coolGray.200" pl="4" pr="5" py="2" >
+            <HStack marginTop={"10px"}  space={3} justifyContent="space-between">
               {/* <Avatar size="48px" source={{
             uri: item.avatarUrl
           }} /> */}

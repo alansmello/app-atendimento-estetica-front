@@ -80,7 +80,7 @@ export const Login = ({ navigation }) => {
                     </Heading>
 
                     <FormControl>
-                        <FormControl.Label>Username</FormControl.Label>
+                        <FormControl.Label >Username</FormControl.Label>
                         <Input w={{
                             base: "100%",
                             md: "25%"
@@ -88,7 +88,7 @@ export const Login = ({ navigation }) => {
                     </FormControl>
 
                     <FormControl>
-                        <FormControl.Label>Senha</FormControl.Label>
+                        <FormControl.Label >Senha</FormControl.Label>
                         <Input w={{
                             base: "100%",
                             md: "25%"
