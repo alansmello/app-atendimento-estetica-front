@@ -4,7 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { Box, FlatList, Heading, Avatar, HStack, FormControl, Input, VStack, Text, Spacer, Center, NativeBaseProvider, Button, Modal, Stack, Divider, ScrollView, Icon } from "native-base";
+import { Box, FlatList, Heading, Avatar, HStack, FormControl, Input, VStack, Text, Spacer, Center, NativeBaseProvider,Image, Button, Modal, Stack, Divider, ScrollView, Icon } from "native-base";
 import { GestureResponderEvent } from "react-native";
 import { AuthenticationContext } from "../../context/Authentication";
 
@@ -31,49 +31,49 @@ export const Patient = ({ navigation }) => {
   const [refresh, setRefresh] = useState<boolean>(false);
   //const [token, setToken] = useState<String>("");
   const token = useContext(AuthenticationContext).token
-  const [search,setSearch] = useState<string>("")
+  const [search, setSearch] = useState<string>("")
 
- /*  useEffect(() => {
-    const list = async () => {
-      //setToken(JSON.parse(await AsyncStorage.getItem('auth')));
-
-      try { <Button onPress={() => {
-      setShowModalAdd(true)
-    }}>Novo Paciente</Button>
-        const patientAPI =  await api.get(`patient/getAllPatient`, {
-
-       
-         headers: { Authorization: `Bearer ${JSON.parse(token)}` }
-
-        })
+  /*  useEffect(() => {
+     const list = async () => {
+       //setToken(JSON.parse(await AsyncStorage.getItem('auth')));
+ 
+       try { <Button onPress={() => {
+       setShowModalAdd(true)
+     }}>Novo Paciente</Button>
+         const patientAPI =  await api.get(`patient/getAllPatient`, {
+ 
         
-        setPatientList(patientAPI.data);
-        setRefresh(false);
-
-      } catch (error) {
-        console.log(error)
-        console.log(token);
-      }
-    }
-    list();
-  }, [refresh]); */
+          headers: { Authorization: `Bearer ${JSON.parse(token)}` }
+ 
+         })
+         
+         setPatientList(patientAPI.data);
+         setRefresh(false);
+ 
+       } catch (error) {
+         console.log(error)
+         console.log(token);
+       }
+     }
+     list();
+   }, [refresh]); */
 
   const getOne = async () => {
-   
+
 
     try {
-      const patientAPI =  await api.get(`patient/${search}`, {
+      const patientAPI = await api.get(`patient/${search}`, {
 
-       headers: { Authorization: `Bearer ${JSON.parse(token)}` }
+        headers: { Authorization: `Bearer ${JSON.parse(token)}` }
 
       })
-      
+
       setPatientList(patientAPI.data);
-     
+
 
     } catch (error) {
       console.log(error)
-     
+
     }
   }
 
@@ -122,193 +122,195 @@ export const Patient = ({ navigation }) => {
     }
   }
 
-  return <Box>
-    <Heading marginTop="50 px" fontSize="xl" p="4" pb="3">
-      Lista de Pacientes
-    </Heading>
-  
-    <FormControl>
-                        <FormControl.Label>Buscar</FormControl.Label>
-                        <Input w={{
-                            base: "100%",
-                            md: "25%"
-                        }} InputRightElement={<Icon as={<MaterialIcons name="person" />} size={5} mr="2" color="black" />} borderColor={'black'} type="text" value={search} onChangeText={setSearch} />
+  return (
+    <Center height={"full"}>
+      <Box safeArea p="0" w="80%" maxW="290" py="9">
 
-                    </FormControl>
-                    <Button onPress={() => {
-     getOne()
-    }}>teste</Button>
+      <Image source={require('../../images/logo.png')} alt="logomarca Priscila Haubrich" size="2xl" style={{width:290}} />
 
-    <Button onPress={() => {
-      setShowModalAdd(true)
-    }}>Novo Paciente</Button>
+        <FormControl>
+     
+          <Input w={{
+            base: "100%",
+            md: "25%"
+          }}  borderColor={'black'} type="text" value={search} onChangeText={setSearch} />
 
+        </FormControl>
+        <Button mt="1" mb="8" colorScheme="indigo" onPress={() => getOne()}>
+          Buscar Paciente
+        </Button>
 
-    <Modal isOpen={showModalAdd} onClose={() => setShowModalAdd(false)}>
-      <Modal.Content maxWidth="400px">
-        <Modal.CloseButton />
-        <Modal.Header>Adicionar Pacientes</Modal.Header>
-        <Modal.Body>
-          <FormControl>
-            <FormControl.Label>Nome</FormControl.Label>
-            <Input value={name} onChangeText={setName} />
-          </FormControl>
-          <FormControl mt="3">
-            <FormControl.Label>Email</FormControl.Label>
-            <Input value={email} onChangeText={setEmail} />
-          </FormControl>
-          <FormControl>
-            <FormControl.Label>WhatsApp</FormControl.Label>
-            <Input value={whatsApp} onChangeText={setwhatsApp} />
-          </FormControl>
-          <FormControl>
-            <FormControl.Label>Data de aniversário</FormControl.Label>
-            <Input value={birthday} onChangeText={setBirthday} />
-          </FormControl>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button.Group space={2}>
-            <Button variant="ghost" colorScheme="blueGray" onPress={() => {
-              setShowModalAdd(false);
-            }}>
-              Sair
-            </Button>
-            <Button onPress={(e) => {
-              addPatient(e);
-              setShowModalAdd(false);
-            }}>
-              Confirmar
-            </Button>
-          </Button.Group>
-        </Modal.Footer>
-      </Modal.Content>
-    </Modal>
-
-  <Center>
-    <FlatList data={PatientList} renderItem={({ item }) =>
+        <Button onPress={() => {
+          setShowModalAdd(true)
+        }}>Criar novo paciente</Button>
 
 
-      <Box borderBottomWidth="1" _dark={{
-        borderColor: "gray.600"
-      }} borderColor="coolGray.200" pl="4" pr="5" py="2">
-        <HStack marginTop={"10px"} space={3} justifyContent="space-between">
-          {/* <Avatar size="48px" source={{
+        <Modal isOpen={showModalAdd} onClose={() => setShowModalAdd(false)}>
+          <Modal.Content maxWidth="400px">
+            <Modal.CloseButton />
+            <Modal.Header>Adicionar Pacientes</Modal.Header>
+            <Modal.Body>
+              <FormControl>
+                <FormControl.Label>Nome</FormControl.Label>
+                <Input value={name} onChangeText={setName} />
+              </FormControl>
+              <FormControl mt="3">
+                <FormControl.Label>Email</FormControl.Label>
+                <Input value={email} onChangeText={setEmail} />
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>WhatsApp</FormControl.Label>
+                <Input value={whatsApp} onChangeText={setwhatsApp} />
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>Data de aniversário</FormControl.Label>
+                <Input value={birthday} onChangeText={setBirthday} />
+              </FormControl>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button.Group space={2}>
+                <Button variant="ghost" colorScheme="blueGray" onPress={() => {
+                  setShowModalAdd(false);
+                }}>
+                  Sair
+                </Button>
+                <Button onPress={(e) => {
+                  addPatient(e);
+                  setShowModalAdd(false);
+                }}>
+                  Confirmar
+                </Button>
+              </Button.Group>
+            </Modal.Footer>
+          </Modal.Content>
+        </Modal>
+
+
+        <FlatList data={PatientList} renderItem={({ item }) =>
+
+
+          <Box borderBottomWidth="1" _dark={{
+            borderColor: "gray.600"
+          }} borderColor="coolGray.200" pl="4" pr="5" py="2">
+            <HStack marginTop={"10px"} space={3} justifyContent="space-between">
+              {/* <Avatar size="48px" source={{
             uri: item.avatarUrl
           }} /> */}
-          <VStack>
-            <Text _dark={{
-              color: "warmGray.50"
-            }} color="coolGray.800" bold>
-              {item?.name}
-            </Text>
-            <Text color="coolGray.600" _dark={{
-              color: "warmGray.200"
-            }}>
-              {item?.email}
-            </Text>
-            <Text color="coolGray.600" _dark={{
-              color: "warmGray.200"
-            }}>
-              {item?.whatsapp}
-            </Text>
-            <Text color="coolGray.600" _dark={{
-              color: "warmGray.200"
-            }}>
-              {item.birthday?.split("-").reverse().join("/")}
-            </Text>
-            <Stack mb="2.5" mt="1.5" direction={{
-              base: "row",
-              md: "row"
-            }} space={2} mx={{
-              base: "auto",
-              md: "0"
-            }}>
-              <Button marginLeft={"60px"} onPress={() => {
-              setPatientId(item.id)
-              setShowModalEdit(true)
-            }}>Editar</Button>
-              <Button onPress={() => {
-              setPatientId(item.id)
-              setShowModal(true)
-            }}>Excluir</Button>
-            </Stack>
-          </VStack>
+              <VStack>
+                <Text _dark={{
+                  color: "warmGray.50"
+                }} color="coolGray.800" bold>
+                  Nome: {item?.name}
+                </Text>
+                <Text color="coolGray.600" _dark={{
+                  color: "warmGray.200"
+                }}>
+                 Email:  {item?.email}
+                </Text>
+                <Text color="coolGray.600" _dark={{
+                  color: "warmGray.200"
+                }}>
+                  Whatsapp: {item?.whatsapp}
+                </Text>
+                <Text color="coolGray.600" _dark={{
+                  color: "warmGray.200"
+                }}>
+                  Nascimento: {item.birthday?.split("-").reverse().join("/")}
+                </Text>
+                <Stack mb="2.5" mt="1.5" direction={{
+                  base: "row",
+                  md: "row"
+                }} space={2} mx={{
+                  base: "auto",
+                  md: "0"
+                }}>
+                  <Button marginLeft={"60px"} onPress={() => {
+                    setPatientId(item.id)
+                    setShowModalEdit(true)
+                  }}>Editar</Button>
+                  <Button onPress={() => {
+                    setPatientId(item.id)
+                    setShowModal(true)
+                  }}>Excluir</Button>
+                </Stack>
+              </VStack>
 
-          <Spacer />
+              <Spacer />
 
-          <Text fontSize="xs" _dark={{
-            color: "warmGray.50"
-          }} color="coolGray.800" alignSelf="flex-start">
+              <Text fontSize="xs" _dark={{
+                color: "warmGray.50"
+              }} color="coolGray.800" alignSelf="flex-start">
 
-            <Modal isOpen={showModalEdit} onClose={() => setShowModalEdit(false)}>
-              <Modal.Content maxWidth="400px">
-                <Modal.CloseButton />
-                <Modal.Header>Editar Pacientes</Modal.Header>
-                <Modal.Body>
-                  <FormControl>
-                    <FormControl.Label>Nome</FormControl.Label>
-                    <Input value={name} onChangeText={setName} />
-                  </FormControl>
-                  <FormControl mt="3">
-                    <FormControl.Label>Email</FormControl.Label>
-                    <Input value={email} onChangeText={setEmail} />
-                  </FormControl>
-                  <FormControl>
-                    <FormControl.Label>WhatsApp</FormControl.Label>
-                    <Input value={whatsApp} onChangeText={setwhatsApp} />
-                  </FormControl>
-                  <FormControl>
-                    <FormControl.Label>Data de aniversário</FormControl.Label>
-                    <Input value={birthday} onChangeText={setBirthday} />
-                  </FormControl>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button.Group space={2}>
-                    <Button variant="ghost" colorScheme="blueGray" onPress={() => {
-                      setShowModalEdit(false);
-                    }}>
-                      Sair
-                    </Button>
-                    <Button onPress={() => {
-                      editPatient();
-                      setShowModalEdit(false);
-                    }}>
-                      Confirmar
-                    </Button>
-                  </Button.Group>
-                </Modal.Footer>
-              </Modal.Content>
-            </Modal>
-            <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="lg">
-              <Modal.Content maxWidth="350">
-                <Modal.CloseButton />
-                <Modal.Body>
-                  <VStack space={3}>
-                    <HStack alignItems="center" justifyContent="space-between">
-                      <Text alignItems="center" >TEM CERTEZA QUE DESEJA EXCLUIR O PACIENTE?</Text>
-                    </HStack>
-                  </VStack>
-                </Modal.Body>
+                <Modal isOpen={showModalEdit} onClose={() => setShowModalEdit(false)}>
+                  <Modal.Content maxWidth="400px">
+                    <Modal.CloseButton />
+                    <Modal.Header>Editar Pacientes</Modal.Header>
+                    <Modal.Body>
+                      <FormControl>
+                        <FormControl.Label>Nome</FormControl.Label>
+                        <Input value={name} onChangeText={setName} />
+                      </FormControl>
+                      <FormControl mt="3">
+                        <FormControl.Label>Email</FormControl.Label>
+                        <Input value={email} onChangeText={setEmail} />
+                      </FormControl>
+                      <FormControl>
+                        <FormControl.Label>WhatsApp</FormControl.Label>
+                        <Input value={whatsApp} onChangeText={setwhatsApp} />
+                      </FormControl>
+                      <FormControl>
+                        <FormControl.Label>Data de aniversário</FormControl.Label>
+                        <Input value={birthday} onChangeText={setBirthday} />
+                      </FormControl>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button.Group space={2}>
+                        <Button variant="ghost" colorScheme="blueGray" onPress={() => {
+                          setShowModalEdit(false);
+                        }}>
+                          Sair
+                        </Button>
+                        <Button onPress={() => {
+                          editPatient();
+                          setShowModalEdit(false);
+                        }}>
+                          Confirmar
+                        </Button>
+                      </Button.Group>
+                    </Modal.Footer>
+                  </Modal.Content>
+                </Modal>
+                <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="lg">
+                  <Modal.Content maxWidth="350">
+                    <Modal.CloseButton />
+                    <Modal.Body>
+                      <VStack space={3}>
+                        <HStack alignItems="center" justifyContent="space-between">
+                          <Text alignItems="center" >TEM CERTEZA QUE DESEJA EXCLUIR O PACIENTE?</Text>
+                        </HStack>
+                      </VStack>
+                    </Modal.Body>
 
-                <Modal.Footer>
-                  <Button margin={"10px"} flex="1" onPress={() => {
-                    setShowModal(false);
-                    deletePatient()
-                  }}>
-                    SIM
-                  </Button>
-                  <Button margin={"10px"} flex="1" onPress={() => {
-                    setShowModal(false);
-                  }}>
-                    NÃO
-                  </Button>
-                </Modal.Footer>
-              </Modal.Content>
-            </Modal>
-          </Text>
-        </HStack>
-      </Box>} keyExtractor={item => item.name} />
-      </Center>
-  </Box>;
+                    <Modal.Footer>
+                      <Button margin={"10px"} flex="1" onPress={() => {
+                        setShowModal(false);
+                        deletePatient()
+                      }}>
+                        SIM
+                      </Button>
+                      <Button margin={"10px"} flex="1" onPress={() => {
+                        setShowModal(false);
+                      }}>
+                        NÃO
+                      </Button>
+                    </Modal.Footer>
+                  </Modal.Content>
+                </Modal>
+              </Text>
+            </HStack>
+          </Box>} keyExtractor={item => item.name} />
 
+      </Box>
+    </Center>
+  )
 };
