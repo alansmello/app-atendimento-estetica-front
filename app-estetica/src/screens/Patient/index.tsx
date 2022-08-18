@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useContext } from "react";
 import { api } from '../../services/clinicaestetica';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, AntDesign } from '@expo/vector-icons';
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { Box, FlatList, Heading, Avatar, HStack, FormControl, Input, VStack, Text, Spacer, Center, NativeBaseProvider,Image, Button, Modal, Stack, Divider, ScrollView, Icon } from "native-base";
+import { Box, FlatList, Heading, Avatar, HStack, FormControl, Input, VStack, Text, Spacer, Center, NativeBaseProvider,Image, Button, Modal, Stack, Divider, ScrollView, Icon, IconButton } from "native-base";
 import { GestureResponderEvent } from "react-native";
 import { AuthenticationContext } from "../../context/Authentication";
 
@@ -127,6 +127,7 @@ export const Patient = ({ navigation }) => {
       <Box safeArea p="0" h="80%" w="80%" maxW="290">
 
       <Image source={require('../../images/logo.png')} alt="logomarca Priscila Haubrich" size="md" style={{width:290}} />
+     
 
         <FormControl>
      
@@ -140,15 +141,15 @@ export const Patient = ({ navigation }) => {
           Buscar Paciente
         </Button>
 
-        <Button onPress={() => {
+        {/* <Button onPress={() => {
           setShowModalAdd(true)
-        }}>Criar novo paciente</Button>
+        }}>Criar novo paciente</Button> */}
 
 
         <Modal isOpen={showModalAdd} onClose={() => setShowModalAdd(false)}>
           <Modal.Content maxWidth="400px">
             <Modal.CloseButton />
-            <Modal.Header>Adicionar Pacientes</Modal.Header>
+            <Modal.Header>Adicionar Paciente</Modal.Header>
             <Modal.Body>
               <FormControl>
                 <FormControl.Label>Nome</FormControl.Label>
@@ -244,7 +245,7 @@ export const Patient = ({ navigation }) => {
                 <Modal isOpen={showModalEdit} onClose={() => setShowModalEdit(false)}>
                   <Modal.Content maxWidth="400px">
                     <Modal.CloseButton />
-                    <Modal.Header>Editar Pacientes</Modal.Header>
+                    <Modal.Header>Editar Paciente</Modal.Header>
                     <Modal.Body>
                       <FormControl>
                         <FormControl.Label>Nome</FormControl.Label>
@@ -310,6 +311,16 @@ export const Patient = ({ navigation }) => {
             </HStack>
           </Box>} keyExtractor={item => item.name} />
 
+
+          <VStack space={4} alignItems="center">
+       <IconButton size={"lg"} colorScheme="indigo" key={"solid"} variant={"solid"} _icon={{
+        as: AntDesign,
+        name: "adduser"
+      }}
+      onPress={() => {
+        setShowModalAdd(true)}}
+      />
+      </VStack>
       </Box>
     </Center>
   )

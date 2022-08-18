@@ -9,7 +9,8 @@ import {
     Icon,
     FormControl,
     Button,
-    Heading
+    Heading,
+  
 } from 'native-base';
 
 import { api } from "../../services/clinicaestetica";
@@ -57,15 +58,17 @@ export const Login = ({ navigation }) => {
     }
 
     return (
+       
         <Center
             height={"full"}
 
         >
+                
             <Box
                 safeArea p="0" w="100%" maxW="290" py="9"
 
             >
-
+                 
                 <Image source={require('../../images/logo.png')} alt="logomarca Priscila Haubrich" size="2xl" style={{width:290}} />
                 <Stack mt={3} space={4} w="100%" maxW="300px">
                     <Heading size="lg" color="coolGray.800" _dark={{
@@ -99,9 +102,11 @@ export const Login = ({ navigation }) => {
                 <Button mt="8" colorScheme="indigo" onPress={(e)=>handleLogin(e)}>
                     Entrar
                 </Button>
-
+             
 
             </Box>
+           
         </Center>
+     
     )
 }

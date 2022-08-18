@@ -1,6 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
+/* import { StatusBar } from 'expo-status-bar'; */
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import { NativeBaseProvider } from 'native-base';
 import { Routes } from './src/Routes';
 import 'react-native-gesture-handler';
@@ -26,12 +26,18 @@ export default function App() {
       backgroundColor={"white"}
       logoHeight={300}
       logoWidth={300}
-    >
+    >  
+   
       <AuthenticationProvider>
+       
         <NativeBaseProvider>
+       
           <Routes />
+         
         </NativeBaseProvider>
+       
       </AuthenticationProvider>
+ 
     </AnimatedSplash>
   );
 }
