@@ -4,7 +4,7 @@ import { MaterialIcons, AntDesign } from '@expo/vector-icons';
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { Box, FlatList, Heading, Avatar, HStack, FormControl, Input, VStack, Text, Spacer, Center, NativeBaseProvider,Image, Button, Modal, Stack, Divider, ScrollView, Icon, IconButton } from "native-base";
+import { Alert, Box, FlatList, Heading, Avatar, HStack, FormControl, Input, VStack, Text, Spacer, Center, NativeBaseProvider, Image, Button, Modal, Stack, Divider, ScrollView, Icon, IconButton, CloseIcon, useToast } from "native-base";
 import { GestureResponderEvent } from "react-native";
 import { AuthenticationContext } from "../../context/Authentication";
 
@@ -31,7 +31,9 @@ export const Patient = ({ navigation }) => {
   const [refresh, setRefresh] = useState<boolean>(false);
   //const [token, setToken] = useState<String>("");
   const token = useContext(AuthenticationContext).token
-  const [search, setSearch] = useState<string>("")
+  const [search, setSearch] = useState<string>("");
+
+  const toast = useToast();
 
   /*  useEffect(() => {
      const list = async () => {
@@ -72,7 +74,18 @@ export const Patient = ({ navigation }) => {
 
 
     } catch (error) {
-      console.log(error)
+      console.log(`erro: ->->->  ${error}`)
+
+      toast.show({
+        placement: "top",
+        render: () => {
+          return <Box bg="red.500" px="3" py="2" rounded="xl" mt={5}>
+                    <Text fontWeight="medium" color="white" fontSize="sm">
+                      Paciente não encontrado!
+                    </Text>
+                </Box>;
+        }
+      })
 
     }
   }
@@ -126,15 +139,15 @@ export const Patient = ({ navigation }) => {
     <Center height={"full"}>
       <Box safeArea p="0" h="80%" w="80%" maxW="290">
 
-      <Image source={require('../../images/logo.png')} alt="logomarca Priscila Haubrich" size="md" style={{width:290}} />
-     
+        <Image source={require('../../images/logo.png')} alt="logomarca Priscila Haubrich" size="md" style={{ width: 290 }} />
+
 
         <FormControl>
-     
+
           <Input w={{
             base: "100%",
             md: "25%"
-          }}  borderColor={'black'} type="text" value={search} onChangeText={setSearch} />
+          }} borderColor={'black'} type="text" value={search} onChangeText={setSearch} />
 
         </FormControl>
         <Button mt="1" mb="8" colorScheme="indigo" onPress={() => getOne()}>
@@ -193,7 +206,7 @@ export const Patient = ({ navigation }) => {
           <Box borderBottomWidth="5" _dark={{
             borderColor: "gray.900"
           }} borderColor="coolGray.200" pl="4" pr="5" py="2" >
-            <HStack marginTop={"10px"}  space={3} justifyContent="space-between">
+            <HStack marginTop={"10px"} space={3} justifyContent="space-between">
               {/* <Avatar size="48px" source={{
             uri: item.avatarUrl
           }} /> */}
@@ -206,7 +219,7 @@ export const Patient = ({ navigation }) => {
                 <Text color="coolGray.600" _dark={{
                   color: "warmGray.200"
                 }}>
-                 Email:  {item?.email}
+                  Email:  {item?.email}
                 </Text>
                 <Text color="coolGray.600" _dark={{
                   color: "warmGray.200"
@@ -225,11 +238,11 @@ export const Patient = ({ navigation }) => {
                   base: "auto",
                   md: "0"
                 }}>
-                  <Button marginLeft={"60px"} onPress={() => {
+                  <Button colorScheme="indigo" marginLeft={"60px"} onPress={() => {
                     setPatientId(item.id)
                     setShowModalEdit(true)
                   }}>Editar</Button>
-                  <Button onPress={() => {
+                  <Button colorScheme="indigo" onPress={() => {
                     setPatientId(item.id)
                     setShowModal(true)
                   }}>Excluir</Button>
@@ -311,17 +324,20 @@ export const Patient = ({ navigation }) => {
             </HStack>
           </Box>} keyExtractor={item => item.name} />
 
-
-          <VStack space={4} alignItems="center">
-       <IconButton size={"lg"} colorScheme="indigo" key={"solid"} variant={"solid"} _icon={{
-        as: AntDesign,
-        name: "adduser"
-      }}
-      onPress={() => {
-        setShowModalAdd(true)}}
-      />
-      </VStack>
       </Box>
+
+
+      <VStack space={4} alignItems="center">
+        <IconButton size={"lg"} colorScheme="indigo" key={"solid"} variant={"solid"} _icon={{
+          as: AntDesign,
+          name: "adduser"
+        }}
+          onPress={() => {
+            setShowModalAdd(true)
+          }}
+        />
+      </VStack>
+
     </Center>
   )
 };

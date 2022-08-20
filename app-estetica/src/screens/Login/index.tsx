@@ -10,6 +10,8 @@ import {
     FormControl,
     Button,
     Heading,
+    useToast,
+    Text
   
 } from 'native-base';
 
@@ -24,6 +26,7 @@ export const Login = ({ navigation }) => {
     const [show, setShow] = useState<Boolean>(false);
     const [username, setUsername] = useState<string>("");
     const [senha, setSenha] = useState<string>("");
+    const toast = useToast();
     const addToken = useContext(AuthenticationContext).addToken
 
     const handleLogin = async (e: GestureResponderEvent) => {
@@ -39,12 +42,23 @@ export const Login = ({ navigation }) => {
 
                 storeData(JSON.stringify(resposta.data))
                 addToken(JSON.stringify(resposta.data))
-                console.log("teste")
+                
                 navigation.navigate("Patient")
 
             }
         } catch (error) {
-            console.log('Erro ao realizar login' + JSON.stringify(error));
+            console.log(error)
+            let erro = error
+            toast.show({
+                    placement: "top",
+                    render: () => {
+                      return <Box bg="red.500" px="3" py="2" rounded="xl" mt={5}>
+                                <Text fontWeight="medium" color="white" fontSize="sm">
+                                  Falha ao Realizar Login!
+                                </Text>
+                            </Box>;
+                    }
+                  })
 
         }
     }

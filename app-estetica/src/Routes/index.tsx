@@ -35,12 +35,12 @@ export const Routes = () => {
             <Tab.Navigator
                 screenOptions={{
                     headerShown: false,
-                    tabBarStyle: { backgroundColor: "#000", paddingVertical: 2 },
+                    tabBarStyle: { backgroundColor: "#4338ca", paddingVertical: 2 },
                     tabBarActiveTintColor: '#fff',
                     tabBarInactiveTintColor: '#a5a9a8',
                 }}
             >
-                <Tab.Screen name="Login" component={Feed} options={{
+                <Tab.Screen name="login" component={Feed} options={{
                     tabBarIcon: ({ color }) => (
                         <MaterialCommunityIcons name="login" size={24} color="white" />
                     ),
